@@ -1,0 +1,78 @@
+server {
+	listen 80;
+	server_name <DOMAIN NAME HERE>;
+	root /config/www/Dashboard;
+	index index.html index.htm index.php;
+
+	client_max_body_size 0;
+
+	location / {
+		try_files $uri $uri/ /index.html /index.php?$args =404;
+	}
+	location ~ \.php$ {
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+		# With php5-cgi alone:
+		fastcgi_pass 127.0.0.1:9000;
+		# With php5-fpm:
+		#fastcgi_pass unix:/var/run/php5-fpm.sock;
+		fastcgi_index index.php;
+		include /etc/nginx/fastcgi_params;
+
+	}
+}
+
+server {
+	listen 80;
+	server_name plex.<DOMAIN NAME HERE>;
+	location / {
+		proxy_pass http://<INTERNAL SERVER IP>:32400/;
+	}
+}
+
+server {
+	listen 80;
+	server_name sonarr.<DOMAIN NAME HERE>;
+	location / {
+		proxy_pass http://<INTERNAL SERVER IP>:8989/;
+	}
+}
+
+server {
+	listen 80;
+	server_name radarr.<DOMAIN NAME HERE>;
+	location / {
+		proxy_pass http://<INTERNAL SERVER IP>:7878/;
+	}
+}
+
+server {
+	listen 80;
+	server_name deluge.<DOMAIN NAME HERE>;
+	location / {
+		proxy_pass http://<INTERNAL SERVER IP>:8112/;
+	}
+}
+
+server {
+	listen 80;
+	server_name jackett.<DOMAIN NAME HERE>;
+	location / {
+		proxy_pass http://<INTERNAL SERVER IP>:9117/;
+	}
+}
+
+server {
+	listen 80;
+	server_name plexpy.<DOMAIN NAME HERE>;
+	location / {
+		proxy_pass http://<INTERNAL SERVER IP>:8181/;
+	}
+}
+
+server {
+	listen 80;
+	server_name requests.<DOMAIN NAME HERE>;
+	location / {
+		proxy_pass http://<INTERNAL SERVER IP>:3579/;
+	}
+}
