@@ -22,10 +22,10 @@ services:
       - PGID=0
       - PUID=0
     volumes:
-      - ~/plex/config:/config
-      - ~/movies:/data/movies     
-      - ~/tvshows:/data/tvshows
-      - ~/plex/transcode:/transcode
+      - ./plex/config:/config
+      - ./plex/transcode:/transcode
+      - ~/torrents/complete/movies:/data/movies     
+      - ~/torrents/complete/tvshows:/data/tvshows
     restart: always  
 
   deluge:
@@ -40,8 +40,10 @@ services:
       - PGID=0
       - PUID=0
     volumes:
-      - ~/deluge/config:/config
-      - ~/deluge/downloads:/downloads
+      - ./deluge/config:/config
+      - ./deluge/config/core.conf:/config/core.conf
+      - ~/torrents/complete:/completed
+      - ~/torrents/incomplete:/incomplete  
     restart: always
   
   sonarr:
@@ -55,9 +57,10 @@ services:
       - PGID=0
       - PUID=0
     volumes:
-      - ~/sonarr/config:/config
-      - ~/tvshows:/tv
-      - ~/deluge/downloads:/downloads
+      - ./sonarr/config:/config
+      - ./sonarr/config/nzbdrobe.db:/config/nzbdrobe.db
+      - ~/torrents/complete/tvshows:/tv
+      - ~/torrents/incomplete:/downloads
 
   radarr:
     image: "linuxserver/radarr"
@@ -70,9 +73,10 @@ services:
       - PGID=0
       - PUID=0
     volumes:
-      - ~/radarr/config:/config
-      - ~/movies:/movies
-      - ~/deluge/downloads:/downloads
+      - ./radarr/config:/config
+      - ./radarr/config/nzbdrobe.db:/config/nzbdrobe.db
+      - ~/torrents/incomplete/movies:/movies
+      - ~/torrents/incomplete:/downloads
 
   jackett:
     image: "linuxserver/jackett"
@@ -85,8 +89,8 @@ services:
       - PGID=0
       - PUID=0
     volumes:
-      - ~/jackett/config:/config
-      - ~/deluge/downloads:/downloads
+      - ./jackett/config:/config
+      - ~/torrents/incomplete:/downloads
 
   plexpy:
     image: "linuxserver/plexpy"
@@ -99,8 +103,8 @@ services:
       - PGID=0
       - PUID=0
     volumes:
-      - ~/plexpy/config:/config
-      - ~/plex/config/Library/Application Support/Plex Media Server/Logs:/logs:ro
+      - ./plexpy/config:/config
+      - ./plexpy/config/config.ini:/config/config.ini
 
   requests:
     image: "linuxserver/ombi"
@@ -113,7 +117,9 @@ services:
       - PGID=0
       - PUID=0
     volumes:
-      - ~/requests/config:/config
+      - ./requests/config:/config
+      - ./requests/config/Ombi.sqlite:/config/Ombi.sqlite
+
 
   organizr:
     image: "lsiocommunity/organizr"
@@ -127,7 +133,7 @@ services:
       - PGID=1000
       - PUID=1000
     volumes:
-      - ~/organizr/config:/config
+      - ./organizr/config:/config
 
 networks:
   media:
